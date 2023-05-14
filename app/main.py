@@ -10,7 +10,9 @@ client = httpx.AsyncClient(base_url="https://news.ycombinator.com/")
 @app.api_route("/{path_name:path}", methods=["GET"])
 async def perform_proxy(request: Request):
     proxy = await client.get(
-        httpx.URL(path=request.url.path, query=request.url.query.encode("utf-8"))
+        httpx.URL(
+            path=request.url.path, query=request.url.query.encode("utf-8")
+        )
     )
     # js script that adds tm mark to every word of 6 characters.
     script = bytes(
@@ -40,5 +42,7 @@ async def perform_proxy(request: Request):
     else:
         content = proxy.content
     return Response(
-        content, proxy.status_code, {"content-type": proxy.headers["Content-Type"]}
+        content,
+        proxy.status_code,
+        {"content-type": proxy.headers["Content-Type"]},
     )
