@@ -12,6 +12,7 @@ async def perform_proxy(request: Request):
     proxy = await client.get(
         httpx.URL(path=request.url.path, query=request.url.query.encode("utf-8"))
     )
+    # js script that adds tm mark to every word of 6 characters.
     script = bytes(
         r"""<script>
     function replaceInText(element, pattern, replacement) {
@@ -33,6 +34,7 @@ async def perform_proxy(request: Request):
         "utf-8",
     )
     if "text/html" in proxy.headers["content-type"]:
+        # add this script to the bottom of the page.
         idx = proxy.content.index(b"</html>")
         content = proxy.content[:idx] + script + proxy.content[idx:]
     else:
